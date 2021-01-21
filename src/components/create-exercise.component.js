@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import axios from 'axios';
 
 //module
 import DatePicker from 'react-datepicker';
@@ -34,12 +35,22 @@ export default class CreateExercise extends Component{
 	//결국, mongoDB에서 바로 user list가 불러져야 하지만 일단은.. 하드코딩으로 대체한다.
 	//이 함수는 React life cycle의 일부이며 component가 연결된 후 바로 불러지게 된다.
 	componentDidMount(){
-		this.setState({
-			users:['test user'],
-			username: 'test user'
-		});
+		axios.get('http://localhost:5000/users/')
+			.then(response => {
+				if(response.data.length>0){
+					this.setState({
+						users : response.data.map(user=>user.username),
+						username: response.data[0].username
+					});
+				}
+			})
+			.catch((error)=>{
+				console.log(error);
+			})
 	}
 	
+
+
 	//add methods in order to update the state properties
 	onChangeUsername(e){
 		this.setState({
@@ -78,6 +89,10 @@ export default class CreateExercise extends Component{
 		};
 
 		console.log(exercise);
+
+		//전송
+		axios.post('http://localhost:5000/exercises/add',exercise)
+			.then(res=>console.log(res.data));
 
 		//홈으로 돌아가는 기능
 		window.location = '/';
