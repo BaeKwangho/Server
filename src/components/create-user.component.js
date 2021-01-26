@@ -27,7 +27,9 @@ export default class CreateUser extends Component {
 		};
 
 		console.log(newUser);
-		//전달
+		//전달. axios.post send http post request to the backend endpoint
+		//which is first argument of below line. this endpoint is expecting a
+		//json object in the request body so we passed in the newUser object
 		axios.post('http://localhost:5000/users/add',newUser)
 			.then(res=>console.log(res.data));
 
